@@ -1,27 +1,18 @@
 package com.exc.privatefix;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Server;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class PrivateFix
-        extends JavaPlugin
-        implements Listener
+public class PrivateFix extends JavaPlugin implements Listener
 {
-    Plugin plugin = this;
+    private Plugin plugin = this;
 
     public void onEnable()
     {
@@ -53,13 +44,11 @@ public class PrivateFix
         Player player = event.getPlayer();
         Location loc = event.getPlayer().getLocation();
         Location locView = event.getPlayer().getEyeLocation();
+        String item = event.getItem().getType().toString();
         WorldGuardPlugin worldGuard = (WorldGuardPlugin)Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
-        if (((!worldGuard.canBuild(player, loc)) || (!worldGuard.canBuild(player, locView))) && (
-                (event.getItem().getType().toString().equals(this.plugin.getConfig().getString("item.item1"))) || (event.getItem().getType().toString().equals(this.plugin.getConfig().getString("item.item2"))) || (event.getItem().getType().toString().equals(this.plugin.getConfig().getString("item.item3"))) || (event.getItem().getType().toString().equals(this.plugin.getConfig().getString("item.item4"))) || (event.getItem().getType().toString().equals(this.plugin.getConfig().getString("item.item5")))))
+        if (!worldGuard.canBuild(player, loc) || !worldGuard.canBuild(player, locView) && plugin.getConfig().getString("item").contains(item))
         {
-            if (this.plugin.getConfig().getBoolean("config.debug")) {
-                player.sendMessage("Interaction denied!");
-            }
+            if (this.plugin.getConfig().getBoolean("config.debug")) {player.sendMessage("Interaction denied!");}
             event.setCancelled(true);
         }
     }

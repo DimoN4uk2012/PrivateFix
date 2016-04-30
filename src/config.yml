@@ -1,0 +1,4 @@
+config:
+    debug: false
+item:
+    - IC2_ITEMTOOLWRENCH
